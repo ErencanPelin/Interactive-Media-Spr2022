@@ -1,4 +1,8 @@
 import java.util.List;
+import controlP5.*;
+ControlP5 cp5;
+String s = "00.00";
+
 
 float[] peopleData = new float[10];
 float[] tempData = new float[100];
@@ -9,7 +13,31 @@ void setup()
 {
   noStroke();
   //init screen
-  size(600, 600);
+  size(1500, 1500);
+  
+  cp5 = new ControlP5(this);
+  cp5.addSlider("HourSlider")
+     .setPosition(500, 1225)
+     .setRange(00.00, 23.59)
+     .setSize(800, 30)
+     .setValueLabel("Hour")
+     ;
+     
+   cp5.addSlider("DaySlider")
+     .setPosition(500, 1325)
+     .setRange(1, 7)
+     .setSize(800, 30)
+     .setValueLabel("Day")
+     ;
+     
+   cp5.addToggle("RealPauseToggle")
+   .setPosition(175, 1300)
+   .setState(true)
+   .setLabel("REAL TIME                                                   PAUSE")
+   .setMode(ControlP5.SWITCH)
+   .setSize(250, 100)
+   ;
+
   
   //init data
   for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
@@ -19,6 +47,7 @@ void setup()
   }
 }
 
+
 int dataPoint = 0; //the variable used to scroll through the data
 float time = 0;
 void draw()
@@ -26,6 +55,8 @@ void draw()
   //refresh screen
   clear();
   drawSkybox();
+  
+  drawHourTime();
   
   //increment time
   time+=0.5;
@@ -59,6 +90,11 @@ void draw()
   
   //draw b11 on top
   drawBuilding();
+}
+
+void drawHourTime() {
+  textSize(50);
+  text(s, 250, 1240);
 }
 
 void drawSkybox() //draws the sun & sky
