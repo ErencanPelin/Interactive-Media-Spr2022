@@ -67,10 +67,10 @@ void draw()
     
     //create human particles: (ENTER)
     for (int i = 0; i < peopleData[dataPoint]; i++)
-      particles.add(new Particle(random(-20, 0), 300 + random(-5, 25), random(2, 3), random(0, 0), #00ff00));
+      particles.add(new Particle(random(-20, 0), (height * 0.5f) + random(-5, 25), random(2, 3), random(0, 0), #00ff00));
     //create human particles: (EXIT)
     for (int i = 0; i < peopleData[dataPoint]; i++)
-      particles.add(new Particle((width / 2) + 150 + random(-20, 0), 300 + random(-5, 25), random(2, 3), random(0, 0), #ff0000));
+      particles.add(new Particle((width / 2) + 150 + random(-20, 0), (height * 0.5f) + random(-5, 25), random(2, 3), random(0, 0), #ff0000));
   }
 
   //create rain particles:
