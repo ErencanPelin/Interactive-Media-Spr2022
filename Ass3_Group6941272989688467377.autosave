@@ -1,0 +1,85 @@
+import java.util.List;
+
+float timeSpeed = 0.25f;
+float[] peopleData = new float[10];
+float[] tempData = new float[100];
+List<Particle> particles = new ArrayList(); //100 = max particles
+List<Particle> garbageStack = new ArrayList();
+
+void setup()
+{
+  noStroke();
+  //init screen
+  size(1500, 1500);
+  
+  //init data
+  for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
+  {
+    peopleData[i] = random(0, 20);
+    tempData[i] = random(0, 10);
+  }
+}
+
+int dataPoint = 0; //the variable used to scroll through the data
+float time = 0;
+void draw()
+{
+  //refresh screen
+  clear();
+  drawSkybox();
+  
+  //increment time
+  time += timeSpeed;
+  if (time % 60 == 0) 
+  {
+    time = 0; //loop
+    dataPoint++;
+    if (dataPoint >= peopleData.length) dataPoint = 0; //loop
+    
+    //create human particles: (ENTER)
+    for (int i = 0; i < peopleData[dataPoint]; i++)
+      particles.add(new Particle(random(-20, 0), (height * 0.5f) + random(-5, 25), random(2, 3), random(0, 0), #00ff00));
+    //create human particles: (EXIT)
+    for (int i = 0; i < peopleData[dataPoint]; i++)
+      particles.add(new Particle((width / 2) + 150 + random(-20, 0), (height * 0.5f) + random(-5, 25), random(2, 3), random(0, 0), #ff0000));
+  }
+
+  //create rain particles:
+  
+  
+  //refresh all particles
+  for(Particle p : particles)
+  {
+    if (p == null) continue;
+    p.Update();
+    if (p.lifetime <= 0) garbageStack.add(p);
+  }
+  
+  //garbage collect
+  RemoveDeadParticles();
+  
+  //draw b11 on top
+  drawBuilding();
+}
+
+void drawSkybox() //draws the sun & sky
+{
+  rectMode(CENTER);
+  fill(#5566ff);
+  rect(width * 0.5f, height * 0.5f, width, height);
+  fill(#449944);
+  rect(width * 0.5f, height * 0.75f, width, height * 0.5f);
+}
+
+void drawBuilding() //draws b11
+{
+  rectMode(CENTER);
+  fill(#666687);
+  rect(width / 2, (height / 2) - 90, 300, 250);
+}
+
+void RemoveDeadParticles()
+{
+  for(Particle p : garbageStack) particles.remove(p);
+  garbageStack.clear();
+}
