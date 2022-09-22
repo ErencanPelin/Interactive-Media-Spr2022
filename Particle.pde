@@ -6,7 +6,7 @@ public class Particle
   
   public Particle(float xPos, float yPos, float xVel, float yVel, color _color)
   {
-    lifetime = random(250, 250);
+    lifetime = random(150, 150);
     this.xPos = xPos;
     this.yPos = yPos;
     this.xVel = xVel;
