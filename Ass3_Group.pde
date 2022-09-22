@@ -56,7 +56,6 @@ void draw()
   clear();
   drawSkybox();
   
-  drawHourTime();
   
   //increment time
   time+=0.5;
@@ -90,6 +89,8 @@ void draw()
   
   //draw b11 on top
   drawBuilding();
+  
+  drawHourTime();
 }
 
 void drawHourTime() {
