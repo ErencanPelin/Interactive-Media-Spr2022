@@ -1,5 +1,5 @@
 import java.util.List;
-import controlP5.*;
+import controlP5.*; // imports the controller class resources
 ControlP5 cp5;
 String s = "00.00";
 
