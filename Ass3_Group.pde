@@ -12,6 +12,7 @@ void setup()
 {
   noStroke();
   //init screen
+  //CHANGE
   size(1500, 900);
   
   //init GUI
