@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Keep in mind, latest changes should appear at the top of the changelog -->
 
+## [0.1.2] - 2022-10-08
+### Changed
+- changed [GUI.pde](GUI.pde) to fix merge artifacts
+
 ## [0.1.1] - 2022-09-23
 
 ### Added

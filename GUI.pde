@@ -11,34 +11,21 @@ public static class GUI //all GUI functions go in here
     
     //init UI
     cp5 = new ControlP5(main);
-<<<<<<< HEAD
-    Slider hourSlider = cp5.addSlider("HourSlider")
-       .setPosition(500, main.height - 40)
-=======
     cp5.addSlider("Hour")
        .setPosition(500, main.height - 90)
->>>>>>> 43ff87de9621a1065bd60c5534651be6270732f4
        .setRange(00.00, 23.59)
        .setSize(800, 30)
        .setNumberOfTickMarks(24)
        .setLabelVisible(false)
        ;
-<<<<<<< HEAD
-     SetSliderColor(hourSlider, #ff0000);  
-     
-     Slider daySlider = cp5.addSlider("DaySlider")
-       .setPosition(500, main.height - 80)
-=======
        
      cp5.addSlider("Day")
        .setPosition(500, main.height - 150)
->>>>>>> 43ff87de9621a1065bd60c5534651be6270732f4
        .setRange(1, 7)
        .setSize(800, 30)
        .setNumberOfTickMarks(7)
        .setLabelVisible(false)
        ;
-     SetSliderColor(daySlider, #ff0000);
        
      cp5.addToggle("RealPauseToggle")
      .setPosition(350, main.height - 120)
