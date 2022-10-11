@@ -8,10 +8,15 @@ int dataPoint = 0; //the variable used to scroll through the data
 List<Particle> particles = new ArrayList(); //stores all active particles to be rendered in the scene
 List<Particle> garbageStack = new ArrayList(); //dead particles are added to this list and then destroyed in the next frame - garbage collection
 List<Particle> inBuilding = new ArrayList(); //the particles currently in the building
+
 Table peopleIN;
 Table peopleOUT;
 int index;
 
+//RAIN
+rain[] r;
+int n = 300; //number of rain droplets
+boolean rainStatus; //toggle rain on or off
 
 void setup()
 {
@@ -29,6 +34,11 @@ void setup()
   peopleOUT = loadTable("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2022-10-01T00%3A00&rToDate=2022-10-07T23%3A59%3A59&rFamily=people_sh&rSensor=CB11.PC02.14.Broadway&rSubSensor=CB11.02.Broadway.East+Out", "csv");
   //Outward People Sensor Data for Broadway East Door from 1st OCT 12:00:00AM - 7th OCT 11:59:59PM
   
+  //RAIN
+  r = new rain[n];
+  for(int i = 0; i < r.length; i++) {
+    r[i] = new rain(random(width), random(200), random(5, 20));
+  }
   
   for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
   {
@@ -42,7 +52,15 @@ void draw()
   //refresh screen
   clear();
   drawSkybox();
-  
+
+rainStatus = true; //turns rain on if set to true
+if (rainStatus == true) {
+for(int i = 0; i < r.length; i++) {
+  r[i].raindrop();
+  r[i].update();
+  }
+}
+
   //increment time
   time += 0.4; //where 0.5 = timeSpeed
   if (time >= 60) 
@@ -97,6 +115,7 @@ void draw()
     textSize(30);
     text("People in: " + s, 200, 100);
     index++;
+    //DISPLAYS DATA ON SCREEN  FOR PEOPLE ENTERING
   }
   
   if (index < peopleOUT.getRowCount()) {
@@ -105,6 +124,7 @@ void draw()
     textSize(30);
     text("People out: " + s, 200, 200);
     index++;
+    //DISPLAYS DATA ON SCREEN FOR PEOPLE LEAVING
   }
   
 //  drawHourTime(); //<>//
