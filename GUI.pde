@@ -12,27 +12,27 @@ public static class GUI //all GUI functions go in here
     //init UI
     cp5 = new ControlP5(main);
     cp5.addSlider("Hour")
-       .setPosition(500, main.height - 90)
+       .setPosition(main.width/3, main.height - 90)
        .setRange(00.00, 23.59)
-       .setSize(800, 30)
+       .setSize(main.width/2, main.height/30)
        .setNumberOfTickMarks(24)
        .setLabelVisible(false)
        ;
        
      cp5.addSlider("Day")
-       .setPosition(500, main.height - 150)
+       .setPosition(main.width/3, main.height - 150)
        .setRange(1, 7)
-       .setSize(800, 30)
+       .setSize(main.width/2, main.height/30)
        .setNumberOfTickMarks(7)
        .setLabelVisible(false)
        ;
        
      cp5.addToggle("RealPauseToggle")
-     .setPosition(350, main.height - 120)
+     .setPosition(main.width/4.5, main.height - 130)
      .setState(true)
      .setLabel("Real Time             Pause")
      .setMode(ControlP5.SWITCH)
-     .setSize(100, 50)
+     .setSize(main.width/10, main.height/18)
      ;
      
      Slider d = cp5.get(Slider.class, "Day");
@@ -70,12 +70,25 @@ public static class GUI //all GUI functions go in here
      h.getTickMark(22).setLabel("10PM");
      h.getTickMark(23).setLabel("11PM");
      
+      Toggle s = cp5.get(Toggle.class, "RealPauseToggle");
+     
+      SetSliderColor(d , #000000, #FFFFFF, #FFFFFF);
+      SetSliderColor(h , #000000, #FFFFFF, #FFFFFF);
+      SetToggleColor(s , #000000, #FFFFFF, #FFFFFF);
+     
   }
   
-  private static void SetSliderColor(Slider s, color col)
+  private static void SetSliderColor(Slider s, color backCol, color foreCol, color actCol)
   {
-    s.setColorBackground(col * 1)
-    .setColorForeground(col)
-    .setColorActive(col);
+    s.setColorBackground(backCol * 1)
+    .setColorForeground(foreCol)
+    .setColorActive(actCol);
+  }
+  
+   private static void SetToggleColor(Toggle t, color backCol, color foreCol, color actCol)
+  {
+    t.setColorBackground(backCol * 1)
+    .setColorForeground(foreCol)
+    .setColorActive(actCol);
   }
 }
