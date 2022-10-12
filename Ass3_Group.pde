@@ -1,5 +1,11 @@
 import java.util.List;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
+String[] dayName = { 
+  "Sunday", "Monday", "Tuesday", "Wednesday", 
+  "Thursday", "Friday", "Saturday"
+};
 public float timeStr = 0.0f; //time string
 float time = 0; //current time within the application
 float[] peopleData = new float[10]; //people data - connect to EIF data
@@ -22,6 +28,8 @@ rain[] r;
 int n = 300; //number of rain droplets
 boolean rainStatus; //toggle rain on or off
 
+Table actualDataTable;
+
 void setup()
 {
   noStroke();
@@ -39,13 +47,39 @@ void setup()
   //Outward People Sensor Data for Broadway East Door from 1st OCT 12:00:00AM - 7th OCT 11:59:59PM
   
   //display the table in console
+  actualDataTable = new Table();
+  actualDataTable.addColumn();
   for(int i = 0; i < peopleIN.getRowCount(); i++)
   {
-    for (int x = 0; x < peopleIN.getColumnCount(); x++)
-    {
-      System.out.println(peopleIN.getString(i, x));
-    }
+    if (!peopleIN.getString(i, 0).split(" ")[1].split(":")[1].equals("00")) continue;
+    actualDataTable.addRow(peopleIN.getRow(i));
   }
+  
+//final int week = new Date().getDay();
+//println(dayName[week]);
+
+//debugging
+  /*SimpleDateFormat dateFormat = new SimpleDateFormat("yy-mm-dd");
+  for(int i = 0; i < actualDataTable.getRowCount(); i++)
+  {
+    try
+    {
+      Date date = dateFormat.parse(actualDataTable.getString(i, 0).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
+      int week = date.getDay();
+      System.out.println(dayName[week]);  
+  }catch(Exception e) {}
+  }*/
+
+//StringToDate
+  
+  //display data in console - DEBUGGING
+  /*for(int i = 0; i < actualDataTable.getRowCount(); i++)
+  {
+    for (int x = 0; x < actualDataTable.getColumnCount(); x++)
+    {
+      System.out.println(actualDataTable.getString(i, x));
+    }
+  }*/
   
   //RAIN
   r = new rain[n];
@@ -120,10 +154,10 @@ for(int i = 0; i < r.length; i++) {
     if (dataPoint >= peopleData.length) dataPoint = 0; //loop
     
     //create human particles: (ENTER)
-    for (int i = 0; i < peopleData[dataPoint]; i++)
+    for (int i = 0; i < peopleData[dataPoint] /*some value from the peopleIN[slider value] array*/; i++)
       particles.add(new Particle(random(-40, 0), (height * 0.5f) + random(-5, 25), random(5, 6), random(0, 0), #00ff00));
     //create human particles: (EXIT)
-    for (int i = 0; i < peopleData[dataPoint]; i++)
+    for (int i = 0; i < peopleData[dataPoint] /*some value from the peopleOUT array*/; i++)
       particles.add(new Particle((width / 2) + 150 + random(-40, 0), (height * 0.5f) + random(-5, 25), random(5, 6), random(0, 0), #ff0000));
 
     int num = inBuilding.size() - round(peopleData[dataPoint]); //the number of particles we're supposed to have in the building
@@ -152,7 +186,6 @@ for(int i = 0; i < r.length; i++) {
     if (p == null) continue;
     p.Update();
   }
-  
   //garbage collect
   RemoveDeadParticles();
   
@@ -218,4 +251,9 @@ void RemoveDeadParticles() //removes dead particles at the end of their lifetime
 {
   for(Particle p : garbageStack) particles.remove(p);
   garbageStack.clear();
+}
+
+public void Hour(float value)
+{
+  println(value);
 }
