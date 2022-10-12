@@ -12,7 +12,7 @@ public static class GUI //all GUI functions go in here
     //init UI
     cp5 = new ControlP5(main);
     cp5.addSlider("Hour")
-       .setPosition(main.width/3, main.height - 90)
+       .setPosition(main.width/4, main.height - 90)
        .setRange(00.00, 23.59)
        .setSize(main.width/2, main.height/30)
        .setNumberOfTickMarks(24)
@@ -20,7 +20,7 @@ public static class GUI //all GUI functions go in here
        ;
        
      cp5.addSlider("Day")
-       .setPosition(main.width/3, main.height - 150)
+       .setPosition(main.width/4, main.height - 150)
        .setRange(1, 7)
        .setSize(main.width/2, main.height/30)
        .setNumberOfTickMarks(7)
