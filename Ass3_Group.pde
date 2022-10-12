@@ -37,7 +37,16 @@ void setup()
   //Inward People Sensor Data for Broadway East Door from 1st OCT 12:00:00AM - 7th OCT 11:59:59PM
   peopleOUT = loadTable("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2022-10-01T00%3A00&rToDate=2022-10-07T23%3A59%3A59&rFamily=people_sh&rSensor=CB11.PC02.14.Broadway&rSubSensor=CB11.02.Broadway.East+Out", "csv");
   //Outward People Sensor Data for Broadway East Door from 1st OCT 12:00:00AM - 7th OCT 11:59:59PM
-   
+  
+  //display the table in console
+  for(int i = 0; i < peopleIN.getRowCount(); i++)
+  {
+    for (int x = 0; x < peopleIN.getColumnCount(); x++)
+    {
+      System.out.println(peopleIN.getString(i, x));
+    }
+  }
+  
   //RAIN
   r = new rain[n];
   for(int i = 0; i < r.length; i++) {
