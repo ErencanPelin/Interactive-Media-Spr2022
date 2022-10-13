@@ -52,7 +52,7 @@ void setup()
   noStroke();
   //init screen
   //CHANGE
-  size(500, 300);//*3
+  size(1500, 900);
   
   //init GUI
   GUI.Init(this);
