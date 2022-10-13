@@ -18,24 +18,41 @@ float [][] peopleDataIN = new float [6][23]; // lists data in Days (x achsis) an
 float [][] peopleDataOUT = new float [6][23]; // lists data in Days (x achsis) and times(y achsis)
 float currentDataIn; // data where sliders are
 float currentDataOut; // data where sliders are
+List<DataStore> datastoreIN = new ArrayList();
+List<DataStore> datastoreOUT = new ArrayList();
+
 
 Table peopleIN;
 Table peopleOUT;
 int index;
+
+// variables to save actualDataTable People Data into DataStore
+Table actualDataTableIN;
+Table actualDataTableOUT;
+ Date date;
+ int weekDay;
+ String weekDayName;
+ int hour;
+ int value;
+
+// slider data
+int sliderDay;
+int sliderHour;
+
 
 //RAIN
 rain[] r;
 int n = 300; //number of rain droplets
 boolean rainStatus; //toggle rain on or off
 
-Table actualDataTable;
+
 
 void setup()
 {
   noStroke();
   //init screen
   //CHANGE
-  size(1500, 900);
+  size(500, 300);//*3
   
   //init GUI
   GUI.Init(this);
@@ -46,29 +63,10 @@ void setup()
   peopleOUT = loadTable("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2022-10-01T00%3A00&rToDate=2022-10-07T23%3A59%3A59&rFamily=people_sh&rSensor=CB11.PC02.14.Broadway&rSubSensor=CB11.02.Broadway.East+Out", "csv");
   //Outward People Sensor Data for Broadway East Door from 1st OCT 12:00:00AM - 7th OCT 11:59:59PM
   
-  //display the table in console
-  actualDataTable = new Table();
-  actualDataTable.addColumn();
-  for(int i = 0; i < peopleIN.getRowCount(); i++)
-  {
-    if (!peopleIN.getString(i, 0).split(" ")[1].split(":")[1].equals("00")) continue;
-    actualDataTable.addRow(peopleIN.getRow(i));
-  }
   
-//final int week = new Date().getDay();
-//println(dayName[week]);
+savePeopleDataINinDataStore();
+savePeopleDataOUTinDataStore();
 
-//debugging
-  /*SimpleDateFormat dateFormat = new SimpleDateFormat("yy-mm-dd");
-  for(int i = 0; i < actualDataTable.getRowCount(); i++)
-  {
-    try
-    {
-      Date date = dateFormat.parse(actualDataTable.getString(i, 0).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
-      int week = date.getDay();
-      System.out.println(dayName[week]);  
-  }catch(Exception e) {}
-  }*/
 
 //StringToDate
   
@@ -87,18 +85,7 @@ void setup()
     r[i] = new rain(random(width), random(200), random(5, 20));
   }
   
-  // save poepleIn and peopleOut into array float [][] peopleDataIN  and float [][] peopleDataOUT 
-   for (int x = 0; x < peopleDataIN.length ; x++) {
-    for (int y = 0; y < peopleDataIN[x].length; y++) {
-       peopleDataIN [x][y] = random (0,20);
-    }
-   }
-   
-    for (int x = 0; x < peopleDataOUT.length ; x++) {
-    for (int y = 0; y < peopleDataOUT[x].length; y++) {
-       peopleDataOUT [x][y] = random (0,20);
-    }
-   }
+
 
  
   
@@ -112,29 +99,25 @@ void setup()
 void draw()
 {
   // match data with slider and save in a current variable
-  // how do I access the Slider date? GUI.cp5.get(Slider.class, "Day" ??
-   /* for (int x = 0; x < peopleDataIN[x].length ; x++) {
-    for (int y = 0; y < peopleDataIN[y].length; y++) {
-      if ( GUI.cp5.get(Slider.class, "Day") == x && GUI.cp5.get(Slider.class, "Hour") == y){
-       currentDataIn = peopleDataIN [x][y]; 
-      }
-    }
-   }
    
-     for (int x = 0; x < peopleDataOUT[x].length ; x++) {
-    for (int y = 0; y < peopleDataOUT[y].length; y++) {
-      if ( GUI.cp5.get(Slider.class, "Day") == x && GUI.cp5.get(Slider.class, "Hour") == y){
-       currentDataOUT = peopleDataOUT [x][y]; 
-      }
-    }
-   }*/
+  /*  for(DataStore d : datastoreIN){
+      if( d.weekDay == sliderDay && d.hour == sliderHour){
+    currentDataIn= d.value;
+  
+    println(d.weekDayName + " " + sliderHour);
+   
+  // println(d.weekDay);
+  // println(d.weekDayName);
+  // println("Slider" + sliderDay);
+   }
+  }*/
   
  
   //refresh screen
   clear();
   drawSkybox();
 
-rainStatus = true; //turns rain on if set to true
+rainStatus = false; //turns rain on if set to true
 if (rainStatus == true) {
 for(int i = 0; i < r.length; i++) {
   r[i].raindrop();
@@ -251,9 +234,88 @@ void RemoveDeadParticles() //removes dead particles at the end of their lifetime
 {
   for(Particle p : garbageStack) particles.remove(p);
   garbageStack.clear();
+ 
+}
+
+void savePeopleDataINinDataStore(){
+  actualDataTableIN = new Table();
+  actualDataTableIN.addColumn();
+  for(int i = 0; i < peopleIN.getRowCount(); i++)
+  {
+    if (!peopleIN.getString(i, 0).split(" ")[1].split(":")[1].equals("00")) continue;
+    actualDataTableIN.addRow(peopleIN.getRow(i));
+  }
+  
+  
+   SimpleDateFormat dateFormatIN = new SimpleDateFormat("yy-mm-dd");
+  for(int i = 0; i < actualDataTableIN.getRowCount(); i++){
+  
+    try
+    {
+      date = dateFormatIN.parse(actualDataTableIN.getString(i, 0).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
+       weekDay = date.getDay();
+      weekDayName = dayName[weekDay];
+      //System.out.println(dayName[weekDay]);
+  }catch(Exception e) {}
+  try 
+  {   hour = int(actualDataTableIN.getString(i, 0).split(" ")[1].split(":")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
+     //System.out.println(hour);
+  
+  }catch (Exception e) {}
+   try 
+  {  value = int(actualDataTableIN.getString(i, 1).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
+     //System.out.println(value);
+  
+  }catch (Exception e) {}
+  datastoreIN.add(new DataStore(date,weekDayName,weekDay,hour,value));
+  
+  }
+  
+}
+
+void savePeopleDataOUTinDataStore(){
+  actualDataTableOUT = new Table();
+  actualDataTableOUT.addColumn();
+  for(int i = 0; i < peopleOUT.getRowCount(); i++)
+  {
+    if (!peopleOUT.getString(i, 0).split(" ")[1].split(":")[1].equals("00")) continue;
+    actualDataTableOUT.addRow(peopleOUT.getRow(i));
+  }
+  
+   SimpleDateFormat dateFormatOUT = new SimpleDateFormat("yy-mm-dd");
+  for(int i = 0; i < actualDataTableOUT.getRowCount(); i++){
+  
+    try
+    {
+      date = dateFormatOUT.parse(actualDataTableOUT.getString(i, 0).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
+      weekDay = date.getDay();
+      weekDayName = dayName[weekDay];
+     // System.out.println(weekDay);
+     // System.out.println(dayName[weekDay]);
+  }catch(Exception e) {}
+  try 
+  {   hour = int(actualDataTableOUT.getString(i, 0).split(" ")[1].split(":")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
+     //System.out.println(hour);
+  
+  }catch (Exception e) {}
+   try 
+  {  value = int(actualDataTableOUT.getString(i, 1).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
+     //System.out.println(value);
+  
+  }catch (Exception e) {}
+  datastoreOUT.add(new DataStore(date,weekDayName,weekDay,hour,value));
+  
+  }
+  
 }
 
 public void Hour(float value)
 {
-  println(value);
+  sliderHour = int(value);
+  //println(int(value));
+}
+public void Day(float value)
+{
+  sliderDay = int(value);
+// println(sliderDay);
 }
