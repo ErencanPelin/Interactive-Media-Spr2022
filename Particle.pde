@@ -9,7 +9,7 @@ public class Particle
   public Particle(float xPos, float yPos, float xVel, float yVel, color _color)
   {
     size = random(10, 20);
-    lifetime = random(150, 150);
+    lifetime = random(50, 50);
     pos = new PVector(xPos, yPos);
     this.xVel = xVel;
     this.yVel = yVel;
