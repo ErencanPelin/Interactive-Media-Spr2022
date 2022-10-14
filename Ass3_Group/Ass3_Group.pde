@@ -24,11 +24,13 @@ List<DataStore> datastoreOUT = new ArrayList();
 
 Table peopleIN;
 Table peopleOUT;
+Table rainTable;
 int index;
 
 // variables to save actualDataTable People Data into DataStore
 Table actualDataTableIN;
 Table actualDataTableOUT;
+
  Date date;
  int weekDay;
  String weekDayName;
@@ -58,11 +60,12 @@ void setup()
   GUI.Init(this);
   
   //init data
-  peopleIN = loadTable("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2022-10-01T00%3A00&rToDate=2022-10-07T23%3A59%3A59&rFamily=people_sh&rSensor=CB11.PC02.14.Broadway&rSubSensor=CB11.02.Broadway.East+In", "csv");
-  //Inward People Sensor Data for Broadway East Door from 1st OCT 12:00:00AM - 7th OCT 11:59:59PM
-  peopleOUT = loadTable("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2022-10-01T00%3A00&rToDate=2022-10-07T23%3A59%3A59&rFamily=people_sh&rSensor=CB11.PC02.14.Broadway&rSubSensor=CB11.02.Broadway.East+Out", "csv");
-  //Outward People Sensor Data for Broadway East Door from 1st OCT 12:00:00AM - 7th OCT 11:59:59PM
-  
+  peopleIN = loadTable("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2022-02-21T00%3A00&rToDate=2022-02-27T23%3A59%3A59&rFamily=people_sh&rSensor=CB11.PC02.14.Broadway&rSubSensor=CB11.02.Broadway.East+In", "csv");
+  //Inward People Sensor Data for Broadway East Door from 21st FEB 12:00:00AM - 27th FEB 11:59:59PM
+  peopleOUT = loadTable("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2022-02-21T00%3A00&rToDate=2022-02-27T23%3A59%3A59&rFamily=people_sh&rSensor=CB11.PC02.14.Broadway&rSubSensor=CB11.02.Broadway.East+Out", "csv");
+  //Outward People Sensor Data for Broadway East Door from 21st FEB 12:00:00AM - 27th FEB 11:59:59PM
+  rainTable = loadTable("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2022-02-21T00%3A00&rToDate=2022-02-27T23%3A59%3A59&rFamily=weather&rSensor=RG", "csv");
+  //Rain Gauge Data for Building 11 from 21st FEB 12:00:00AM - 27th FEB 11:59:59PM
   
 savePeopleDataINinDataStore();
 savePeopleDataOUTinDataStore();
