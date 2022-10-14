@@ -69,7 +69,7 @@ savePeopleDataOUTinDataStore();
 
 
 //StringToDate
-  
+  /*
   //display data in console - DEBUGGING
   for(int i = 0; i < actualDataTableIN.getRowCount(); i++)
   {
@@ -77,7 +77,7 @@ savePeopleDataOUTinDataStore();
     {
       System.out.println(actualDataTableIN.getString(i, x));
     }
-  }
+  }*/
   
   //RAIN
   r = new rain[n];
@@ -239,13 +239,23 @@ void savePeopleDataINinDataStore(){
   actualDataTableIN.addColumn();
   actualDataTableIN.addColumn();
   int t = 0;
+  int lastHr = -1;
   for(int i = 0; i < peopleIN.getRowCount(); i++)
   {
-    if (!peopleIN.getString(i, 0).split(" ")[1].split(":")[1].equals("00"))
+    println(peopleIN.getString(i, 0));
+    int newHour = Integer.parseInt(peopleIN.getString(i, 0).split(" ")[1].split(":")[0]);
+
+    if (newHour != lastHr)
     {
-      t += Integer.parseInt(peopleIN.getString(i, 1));
-      continue;
+      lastHr = newHour;
+      
     }
+       
+   // if (!peopleIN.getString(i, 0).split(" ")[1].split(":")[1].equals("0"))
+   // {
+   //   t += Integer.parseInt(peopleIN.getString(i, 1));
+   //   continue;
+   // }
     TableRow newRow = actualDataTableIN.addRow();
     newRow.setString(0, peopleIN.getString(i, 0));
     newRow.setInt(1, t);
