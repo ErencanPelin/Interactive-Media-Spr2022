@@ -71,27 +71,25 @@ savePeopleDataOUTinDataStore();
 //StringToDate
   
   //display data in console - DEBUGGING
-  /*for(int i = 0; i < actualDataTable.getRowCount(); i++)
+  for(int i = 0; i < actualDataTableIN.getRowCount(); i++)
   {
-    for (int x = 0; x < actualDataTable.getColumnCount(); x++)
+    for (int x = 0; x < actualDataTableIN.getColumnCount(); x++)
     {
-      System.out.println(actualDataTable.getString(i, x));
+      System.out.println(actualDataTableIN.getString(i, x));
     }
-  }*/
+  }
   
   //RAIN
   r = new rain[n];
   for(int i = 0; i < r.length; i++) {
     r[i] = new rain(random(width), random(200), random(5, 20));
   }
-  
-
-
  
   
   for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
   {
-    peopleData[i] = random(0, 20);}
+    peopleData[i] = random(0, 20);
+  }
    // tempData[i] = random(0, 10);
   
 }
@@ -214,7 +212,6 @@ void drawBuilding() //draws building 11
 {
   rectMode(LEFT);
   fill(#666687);
-  float h = height / 2;
   rect(width * 0.3, height * 0.3, width * 0.7, height * 0.55);
 }
 
@@ -240,10 +237,20 @@ void RemoveDeadParticles() //removes dead particles at the end of their lifetime
 void savePeopleDataINinDataStore(){
   actualDataTableIN = new Table();
   actualDataTableIN.addColumn();
+  actualDataTableIN.addColumn();
+  int t = 0;
   for(int i = 0; i < peopleIN.getRowCount(); i++)
   {
-    if (!peopleIN.getString(i, 0).split(" ")[1].split(":")[1].equals("00")) continue;
-    actualDataTableIN.addRow(peopleIN.getRow(i));
+    if (!peopleIN.getString(i, 0).split(" ")[1].split(":")[1].equals("00"))
+    {
+      t += Integer.parseInt(peopleIN.getString(i, 1));
+      continue;
+    }
+    TableRow newRow = actualDataTableIN.addRow();
+    newRow.setString(0, peopleIN.getString(i, 0));
+    newRow.setInt(1, t);
+    actualDataTableIN.addRow(newRow);
+    t = 0;
   }
   
   
