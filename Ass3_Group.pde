@@ -298,6 +298,9 @@ public void Hour(float value)
   if (curDataIn == null || int(value) != curDataIn.hour)
   {
     trackIn = 0;
+  }
+  if (curDataOut == null || int(value) != curDataOut.hour)
+  {
     trackOut = 0;
   }
 }
@@ -307,6 +310,9 @@ public void Day(float value)
   if (curDataIn == null || int(value) != curDataIn.weekDay)
   {
     trackIn = 0;
+  }
+  if (curDataOut == null || int(value) != curDataOut.weekDay)
+  {
     trackOut = 0;
   }
 }
