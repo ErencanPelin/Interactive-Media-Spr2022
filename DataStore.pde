@@ -17,4 +17,9 @@ public class DataStore
     this.hour = hour;
     this.value = value;
   }
+  
+  public String toString()
+  {
+    return date.toString() + ", " + weekDayName + ", " + hour + ", " + value;
+  }
 }

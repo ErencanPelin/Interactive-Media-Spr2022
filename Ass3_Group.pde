@@ -27,16 +27,6 @@ Table peopleOUT;
 Table rainTable;
 int index;
 
-// variables to save actualDataTable People Data into DataStore
-Table actualDataTableIN;
-Table actualDataTableOUT;
-
-Date date;
-int weekDay;
-String weekDayName;
-int hour;
-int value;
-
 // slider data
 int sliderDay;
 int sliderHour;
@@ -230,99 +220,56 @@ void RemoveDeadParticles() //removes dead particles at the end of their lifetime
   garbageStack.clear();
 }
 
+SimpleDateFormat dateFormat = new SimpleDateFormat("yy-mm-dd");
 void savePeopleDataINinDataStore()
 {
-  actualDataTableIN = new Table();
-  actualDataTableIN.addColumn();
-  actualDataTableIN.addColumn();
   int t = 0;
-  int lastHr = -1;
+  int lastHr = 3;//Integer.parseInt(peopleIN.getString(0, 0).split(" ")[1].split(":")[0]);
   for(int i = 0; i < peopleIN.getRowCount(); i++)
   {
-    println(peopleIN.getString(i, 0));
     int newHour = Integer.parseInt(peopleIN.getString(i, 0).split(" ")[1].split(":")[0]);
-
+    int val = peopleIN.getInt(i, 1);
+    t += val;
     if (newHour != lastHr)
     {
+      t = 0;
       lastHr = newHour;
       
+      try
+      {
+        Date date = dateFormat.parse(peopleIN.getString(i, 0).split(" ")[0]); 
+        String weekDayName = dayName[date.getDay()];
+        datastoreIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,val));
+      } catch(Exception e) {}
+      
+     // println(datastoreIN.get(datastoreIN.size() - 1));
     }
-       
-   // if (!peopleIN.getString(i, 0).split(" ")[1].split(":")[1].equals("0"))
-   // {
-   //   t += Integer.parseInt(peopleIN.getString(i, 1));
-   //   continue;
-   // }
-    TableRow newRow = actualDataTableIN.addRow();
-    newRow.setString(0, peopleIN.getString(i, 0));
-    newRow.setInt(1, t);
-    actualDataTableIN.addRow(newRow);
-    t = 0;
-  }
-  
-  
-  SimpleDateFormat dateFormatIN = new SimpleDateFormat("yy-mm-dd");
-  for(int i = 0; i < actualDataTableIN.getRowCount(); i++)
-  {
-    try
-    {
-      date = dateFormatIN.parse(actualDataTableIN.getString(i, 0).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
-      weekDay = date.getDay();
-      weekDayName = dayName[weekDay];
-      //System.out.println(dayName[weekDay]);
-    }catch(Exception e) {}
-    
-    try 
-    {   hour = int(actualDataTableIN.getString(i, 0).split(" ")[1].split(":")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
-       //System.out.println(hour);
-    
-    }catch (Exception e) {}
-    
-    try 
-    {  value = int(actualDataTableIN.getString(i, 1).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
-       //System.out.println(value);
-    
-    }catch (Exception e) {}
-    
-    datastoreIN.add(new DataStore(date,weekDayName,weekDay,hour,value));
   }
 }
 
 void savePeopleDataOUTinDataStore()
 {
-  actualDataTableOUT = new Table();
-  actualDataTableOUT.addColumn();
+  int t = 0;
+  int lastHr = 3;//Integer.parseInt(peopleIN.getString(0, 0).split(" ")[1].split(":")[0]);
   for(int i = 0; i < peopleOUT.getRowCount(); i++)
   {
-    if (!peopleOUT.getString(i, 0).split(" ")[1].split(":")[1].equals("00")) continue;
-    actualDataTableOUT.addRow(peopleOUT.getRow(i));
-  }
-  
-  SimpleDateFormat dateFormatOUT = new SimpleDateFormat("yy-mm-dd");
-  for(int i = 0; i < actualDataTableOUT.getRowCount(); i++)
-  {
-    try
+    int newHour = Integer.parseInt(peopleOUT.getString(i, 0).split(" ")[1].split(":")[0]);
+    int val = peopleOUT.getInt(i, 1);
+    t += val;
+    if (newHour != lastHr)
     {
-      date = dateFormatOUT.parse(actualDataTableOUT.getString(i, 0).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
-      weekDay = date.getDay();
-      weekDayName = dayName[weekDay];
-       // System.out.println(weekDay);
-       // System.out.println(dayName[weekDay]);
-    }catch(Exception e) {}
-    
-    try 
-    {   
-      hour = int(actualDataTableOUT.getString(i, 0).split(" ")[1].split(":")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
-      //System.out.println(hour);
-    }catch (Exception e) {}
-    
-    try 
-    {  value = int(actualDataTableOUT.getString(i, 1).split(" ")[0]); //actualDataTable.getString(i, 0).split(" ")[0].StringToDate();
-       //System.out.println(value);
-    
-    }catch (Exception e) {}
-    
-    datastoreOUT.add(new DataStore(date,weekDayName,weekDay,hour,value));
+      t = 0;
+      lastHr = newHour;
+      
+      try
+      {
+        Date date = dateFormat.parse(peopleOUT.getString(i, 0).split(" ")[0]); 
+        String weekDayName = dayName[date.getDay()];
+        datastoreOUT.add(new DataStore(date,weekDayName,date.getDay(),lastHr,val));
+      } catch(Exception e) {}
+      
+      //println(datastoreOUT.get(datastoreOUT.size() - 1));
+    }
   }
 }
 
@@ -335,4 +282,20 @@ public void Day(float value)
 {
   sliderDay = int(value);
 // println(sliderDay);
+}
+
+public Table TrimHours(Table table)
+{
+  Table newTable = new Table();
+  for (int i = 0; i < table.getColumnCount(); i++)
+  {
+    newTable.addColumn();
+  }
+  
+  for (int i = 0; i < table.getRowCount(); i++)
+  {
+    newTable.addRow(table.getRow(i));
+  }
+  
+  return newTable;
 }
