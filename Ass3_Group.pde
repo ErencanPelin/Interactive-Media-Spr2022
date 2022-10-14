@@ -1,3 +1,4 @@
+//import beads.*;
 import java.util.List;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -34,6 +35,11 @@ int sliderHour;
 rain[] r;
 int n = 300; //number of rain droplets
 boolean rainStatus; //toggle rain on or off
+
+//AudioContext ac;
+//SamplePlayer player;
+//String audioFileName;
+
 
 void setup()
 {
@@ -75,6 +81,10 @@ void setup()
   
   for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
     peopleData[i] = random(0, 20);
+    
+
+    //ac = new AudioContext();
+    
 }
 
 int trackIn;
@@ -120,6 +130,7 @@ void draw()
       r[i].raindrop();
       r[i].update();
     }
+    //sound();
   }
 
     
@@ -197,6 +208,15 @@ void draw()
     //DISPLAYS DATA ON SCREEN FOR PEOPLE LEAVING
   }
 }
+
+//public void sound() {
+//  audioFileName = "Rain.mp3";
+//  player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
+//  Gain g = new Gain(ac, 1, 1);
+//  g.addInput(player);
+//  ac.out.addInput(g);
+//  ac.start();
+//}
 
 void drawHourTime() //draws current time on the screen
 {
