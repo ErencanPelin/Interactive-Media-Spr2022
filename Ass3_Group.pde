@@ -1,4 +1,5 @@
-//import beads.*;
+import beads.*;
+import processing.sound.*;
 import java.util.List;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -33,12 +34,12 @@ int sliderHour;
 
 //RAIN
 rain[] r;
-int n = 300; //number of rain droplets
+int n = 350; //number of rain droplets
 boolean rainStatus; //toggle rain on or off
 
 //AudioContext ac;
-//SamplePlayer player;
-//String audioFileName;
+SoundFile rain;
+int rainOnce;
 
 
 void setup()
@@ -77,13 +78,14 @@ void setup()
   //RAIN
   r = new rain[n];
   for(int i = 0; i < r.length; i++) 
-    r[i] = new rain(random(width), random(200), random(5, 20));
+    r[i] = new rain(random(width), random(200), random(5, 25));
   
   for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
     peopleData[i] = random(0, 20);
     
 
     //ac = new AudioContext();
+    rain = new SoundFile(this, "RainAudioFile.mp3");
     
 }
 
@@ -122,7 +124,7 @@ void draw()
   //refresh screen
   clear();
 
-  rainStatus = false; //turns rain on if set to true
+  rainStatus = true; //turns rain on if set to true
   if (rainStatus == true) 
   {
     for(int i = 0; i < r.length; i++) 
@@ -131,6 +133,10 @@ void draw()
       r[i].update();
     }
     //sound();
+    rainOnce++;
+    if (rainOnce == 1){
+    rain.play();
+    }
   }
 
     
@@ -188,35 +194,35 @@ void draw()
   //garbage collect
   RemoveDeadParticles();
   
-  if (index < peopleIN.getRowCount())
-  {
-    int p = peopleIN.getInt(index, 1);
-    String s = Integer.toString(p);
-    textSize(30);
-    text("People in: " + s, 200, 100);
-    index++;
-    //DISPLAYS DATA ON SCREEN  FOR PEOPLE ENTERING
-  }
+  //if (index < peopleIN.getRowCount())
+  //{
+  //  int p = peopleIN.getInt(index, 1);
+  //  String s = Integer.toString(p);
+  //  textSize(30);
+  //  text("People in: " + s, 200, 100);
+  //  index++;
+  //  //DISPLAYS DATA ON SCREEN  FOR PEOPLE ENTERING
+  //}
   
-  if (index < peopleOUT.getRowCount()) 
-  {
-    int o = peopleOUT.getInt(index, 1);
-    String s = Integer.toString(o);
-    textSize(30);
-    text("People out: " + s, 200, 200);
-    index++;
-    //DISPLAYS DATA ON SCREEN FOR PEOPLE LEAVING
-  }
+//  if (index < peopleOUT.getRowCount()) 
+//  {
+//    int o = peopleOUT.getInt(index, 1);
+//    String s = Integer.toString(o);
+//    textSize(30);
+//    text("People out: " + s, 200, 200);
+//    index++;
+//    //DISPLAYS DATA ON SCREEN FOR PEOPLE LEAVING
+//  }
 }
 
-//public void sound() {
-//  audioFileName = "Rain.mp3";
-//  player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
-//  Gain g = new Gain(ac, 1, 1);
-//  g.addInput(player);
-//  ac.out.addInput(g);
-//  ac.start();
-//}
+public void sound() {
+  //String audioFileName = "RainAudioFile.mp3";
+  //SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
+  //Gain g = new Gain(ac, 1, 1);
+  //g.addInput(player);
+  //ac.out.addInput(g);
+  //ac.start();
+}
 
 void drawHourTime() //draws current time on the screen
 {
