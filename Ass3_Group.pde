@@ -87,23 +87,38 @@ void setup()
     
 }
 
+int trackIn;
+int trackOut;
+int trackFill;
+int toFill;
+DataStore curDataIn;
+DataStore curDataOut;
 void draw()
 {
+  curDataIn = null;
+  curDataOut = null;
   // match data with slider and save in a current variable
-   
-  /*  for(DataStore d : datastoreIN){
-      if( d.weekDay == sliderDay && d.hour == sliderHour){
-    currentDataIn= d.value;
-  
-    println(d.weekDayName + " " + sliderHour);
-   
-  // println(d.weekDay);
-  // println(d.weekDayName);
-  // println("Slider" + sliderDay);
-   }
-  }*/
-  
- 
+  for(DataStore d : datastoreIN)
+  {
+    //println(sliderDay + " " + sliderHour);
+    if(d.weekDay == sliderDay && d.hour == sliderHour)
+    {
+      currentDataIn = d.value;
+      curDataIn = d;
+    }
+  }
+  for(DataStore d : datastoreOUT)
+  {
+    //println(sliderDay + " " + sliderHour);
+    if(d.weekDay == sliderDay && d.hour == sliderHour)
+    {
+      currentDataOut = d.value;
+      curDataOut = d;
+    }
+  }
+  if (curDataIn == null) currentDataIn = 0;
+  if (curDataOut == null) currentDataOut = 0;
+  toFill = round(currentDataIn - currentDataOut);
   //refresh screen
   clear();
 
@@ -118,9 +133,10 @@ void draw()
     //sound();
   }
 
+    
   //increment time
-  time += 0.4; //where 0.5 = timeSpeed
-  if (time >= 60) 
+  time += 1; //where 0.5 = timeSpeed
+  if (time >= 2) 
   {   
     time = 0;
     timeStr++; //loop the hour
@@ -128,25 +144,32 @@ void draw()
     
     dataPoint++; //increment the datapoint for the hour
     if (dataPoint >= peopleData.length) dataPoint = 0; //loop
-    
-    //create human particles: (ENTER)
-    for (int i = 0; i < peopleData[dataPoint] /*some value from the peopleIN[slider value] array*/; i++)
-      particles.add(new Particle(random(-40, 0), (height * 0.5f) + random(-5, 25), random(5, 6), random(0, 0), #00ff00));
-    //create human particles: (EXIT)
-    for (int i = 0; i < peopleData[dataPoint] /*some value from the peopleOUT array*/; i++)
+   
+   if (trackIn < currentDataIn)
+   {
+      particles.add(new Particle(random(-90, 0), (height * 0.5f) + random(-5, 25), random(5, 10), random(0, 0), #00ff00));
+      trackIn++;
+   }   
+   
+   if (trackOut < currentDataOut)
+   {
       particles.add(new Particle((width / 2) + 150 + random(-40, 0), (height * 0.5f) + random(-5, 25), random(5, 6), random(0, 0), #ff0000));
-
-    int num = inBuilding.size() - round(peopleData[dataPoint]); //the number of particles we're supposed to have in the building
-    if (num > 0) //we need to remove some particles
-    {
-      for (int i = num; i > 0; i--)
-        inBuilding.remove(0);
-    }
-    else if (num < 0) //we need to add some particles
-    {
-      for (int i = 0; i < abs(num); i++)
-        spawnBuildingParticle();
-    }
+      trackOut++;
+   } 
+   
+   if (trackFill < toFill) //add people
+   {
+     spawnBuildingParticle();
+     trackFill++;
+   }
+   if (trackFill > toFill)
+   {
+     if (inBuilding.size() > 1)
+     {
+       inBuilding.remove(0);
+       trackFill--;
+     }
+   }
   }
   
   //update all particles
@@ -224,7 +247,7 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("yy-mm-dd");
 void savePeopleDataINinDataStore()
 {
   int t = 0;
-  int lastHr = 3;//Integer.parseInt(peopleIN.getString(0, 0).split(" ")[1].split(":")[0]);
+  int lastHr = 3;
   for(int i = 0; i < peopleIN.getRowCount(); i++)
   {
     int newHour = Integer.parseInt(peopleIN.getString(i, 0).split(" ")[1].split(":")[0]);
@@ -232,17 +255,15 @@ void savePeopleDataINinDataStore()
     t += val;
     if (newHour != lastHr)
     {
-      t = 0;
       lastHr = newHour;
       
       try
       {
         Date date = dateFormat.parse(peopleIN.getString(i, 0).split(" ")[0]); 
         String weekDayName = dayName[date.getDay()];
-        datastoreIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,val));
+        datastoreIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,t));
       } catch(Exception e) {}
-      
-     // println(datastoreIN.get(datastoreIN.size() - 1));
+      t = 0;
     }
   }
 }
@@ -258,17 +279,15 @@ void savePeopleDataOUTinDataStore()
     t += val;
     if (newHour != lastHr)
     {
-      t = 0;
       lastHr = newHour;
       
       try
       {
         Date date = dateFormat.parse(peopleOUT.getString(i, 0).split(" ")[0]); 
         String weekDayName = dayName[date.getDay()];
-        datastoreOUT.add(new DataStore(date,weekDayName,date.getDay(),lastHr,val));
+        datastoreOUT.add(new DataStore(date,weekDayName,date.getDay(),lastHr,t));
       } catch(Exception e) {}
-      
-      //println(datastoreOUT.get(datastoreOUT.size() - 1));
+      t = 0;
     }
   }
 }
@@ -276,26 +295,18 @@ void savePeopleDataOUTinDataStore()
 public void Hour(float value)
 {
   sliderHour = int(value);
-  //println(int(value));
+  if (curDataIn == null || int(value) != curDataIn.hour)
+  {
+    trackIn = 0;
+    trackOut = 0;
+  }
 }
 public void Day(float value)
 {
   sliderDay = int(value);
-// println(sliderDay);
-}
-
-public Table TrimHours(Table table)
-{
-  Table newTable = new Table();
-  for (int i = 0; i < table.getColumnCount(); i++)
+  if (curDataIn == null || int(value) != curDataIn.weekDay)
   {
-    newTable.addColumn();
+    trackIn = 0;
+    trackOut = 0;
   }
-  
-  for (int i = 0; i < table.getRowCount(); i++)
-  {
-    newTable.addRow(table.getRow(i));
-  }
-  
-  return newTable;
 }
