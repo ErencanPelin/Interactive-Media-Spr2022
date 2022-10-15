@@ -183,6 +183,9 @@ void draw()
   //rainStatus = true; //turns rain on if set to true
   if (rainStatus == true) 
   {
+    textSize(30);
+    fill(255);
+    text("! Rainfall @ Current Selected Time: " + curDataRAIN.value + "ml", 30, 40);
     for(int i = 0; i < r.length; i++) 
     {
       r[i].raindrop();
