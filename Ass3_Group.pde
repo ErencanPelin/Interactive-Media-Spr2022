@@ -23,6 +23,8 @@ float currentDataOut; // data where sliders are
 List<DataStore> datastoreIN = new ArrayList();
 List<DataStore> datastoreOUT = new ArrayList();
 
+PShape building; // creats a variable for the obj file
+
 Table peopleIN;
 Table peopleOUT;
 Table rainTable;
@@ -47,7 +49,11 @@ void setup()
   noStroke();
   //init screen
   //CHANGE
-  size(1500, 900);
+  lights();
+  size(1500, 900, P3D); 
+  building = loadShape("uts_11_2.obj"); // assigns the OBJ file to the Pshape variable
+  building.translate(-1300,-670,-400);
+  building.rotate(PI);
   
   //init GUI
   GUI.Init(this);
@@ -97,6 +103,7 @@ DataStore curDataIn;
 DataStore curDataOut;
 void draw()
 {
+  lights();
   curDataIn = null;
   curDataOut = null;
   // match data with slider and save in a current variable
@@ -124,6 +131,7 @@ void draw()
   toFill = round(currentDataIn - currentDataOut);
   //refresh screen
   clear();
+  shape(building);
 
   rainStatus = true; //turns rain on if set to true
   if (rainStatus == true) 
@@ -139,8 +147,7 @@ void draw()
     rain.play();
     }
   }
-
-    
+ 
   //increment time
   time += 1; //where 0.5 = timeSpeed
   if (time >= 2) 
@@ -186,7 +193,7 @@ void draw()
     p.Update();
     if (p.lifetime <= 0) garbageStack.add(p);
   }
-  
+  drawBuilding();
   for(Particle p : inBuilding)
   {
     if (p == null) continue;
@@ -223,6 +230,11 @@ public void sound() {
   //g.addInput(player);
   //ac.out.addInput(g);
   //ac.start();
+}
+public void drawBuilding(){
+  rectMode(LEFT);
+  fill(#414141);
+  rect(width * 0.3, height * 0.3, width * 0.7-30, height * 0.55);
 }
 
 void drawHourTime() //draws current time on the screen
