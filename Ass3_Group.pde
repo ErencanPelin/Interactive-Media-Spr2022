@@ -20,8 +20,10 @@ float [][] peopleDataIN = new float [6][23]; // lists data in Days (x achsis) an
 float [][] peopleDataOUT = new float [6][23]; // lists data in Days (x achsis) and times(y achsis)
 float currentDataIn; // data where sliders are
 float currentDataOut; // data where sliders are
+float currentDataRAIN; // data where sliders are
 List<DataStore> datastoreIN = new ArrayList();
 List<DataStore> datastoreOUT = new ArrayList();
+List<DataStore> datastoreRAIN = new ArrayList();
 
 PShape building; // creats a variable for the obj file
 
@@ -38,6 +40,7 @@ int sliderHour;
 rain[] r;
 int n = 350; //number of rain droplets
 boolean rainStatus; //toggle rain on or off
+//float rainAmount;
 
 //AudioContext ac;
 SoundFile rain;
@@ -50,7 +53,7 @@ void setup()
   //init screen
   //CHANGE
   lights();
-  size(1500, 900, P3D); 
+  size(1500, 900, P3D);
   building = loadShape("UTS_B11_Final.obj"); // assigns the OBJ file to the Pshape variable
   building.translate(-1300,-670,-400);
   building.rotate(PI);
@@ -68,6 +71,7 @@ void setup()
   
   savePeopleDataINinDataStore();
   savePeopleDataOUTinDataStore();
+  saveRainDatainDataStore();
 
 
 //StringToDate
@@ -101,11 +105,13 @@ int trackFill;
 int toFill;
 DataStore curDataIn;
 DataStore curDataOut;
+DataStore curDataRAIN;
 void draw()
 {
   lights();
   curDataIn = null;
   curDataOut = null;
+  curDataRAIN = null;
   // match data with slider and save in a current variable
   for(DataStore d : datastoreIN)
   {
@@ -126,14 +132,53 @@ void draw()
       curDataOut = d;
     }
   }
+  for(DataStore d : datastoreRAIN)
+  {
+    //println(sliderDay + " " + sliderHour);
+    if(d.weekDay == sliderDay && d.hour == sliderHour)
+    {
+      currentDataRAIN = d.value;
+      curDataRAIN = d;
+      System.out.println(curDataRAIN);
+    }
+  }
   if (curDataIn == null) currentDataIn = 0;
   if (curDataOut == null) currentDataOut = 0;
+  if (curDataRAIN == null) currentDataRAIN = 0;
   toFill = round(currentDataIn - currentDataOut);
   //refresh screen
   clear();
   shape(building);
 
-  rainStatus = true; //turns rain on if set to true
+  //for(int i = 0; i <rainTable.getRowCount(); i++)
+  //{
+  //  for (int x = 0; x < rainTable.getColumnCount(); x++)
+  //  {
+  //    //System.out.println(rainTable.getString(i, x));
+  //    rainAmount = rainTable.getFloat(i, 1);
+  //    //System.out.println(rainAmount);
+  //  }
+  //}
+  
+  //if (rainAmount > 0.0) {
+  //  rainStatus = true;
+  //}
+  //if (rainAmount == 0.0) {
+  //  rainStatus = false;
+  //}
+  
+  //if (mousePressed) {
+  //  rainStatus = true;
+  //}
+  //else {
+  //  rainStatus = false;
+  //}
+  
+  if (curDataRAIN.value > 0.0) {
+    rainStatus = true;
+  }
+  
+  //rainStatus = true; //turns rain on if set to true
   if (rainStatus == true) 
   {
     for(int i = 0; i < r.length; i++) 
@@ -146,6 +191,10 @@ void draw()
     if (rainOnce == 1){
     rain.play();
     }
+  }
+  else {
+    rain.stop();
+    rainOnce = 0;
   }
  
   //increment time
@@ -223,14 +272,14 @@ void draw()
   }*/
 }
 
-public void sound() {
-  //String audioFileName = "RainAudioFile.mp3";
-  //SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
-  //Gain g = new Gain(ac, 1, 1);
-  //g.addInput(player);
-  //ac.out.addInput(g);
-  //ac.start();
-}
+//public void sound() {
+//  //String audioFileName = "RainAudioFile.mp3";
+//  //SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
+//  //Gain g = new Gain(ac, 1, 1);
+//  //g.addInput(player);
+//  //ac.out.addInput(g);
+//  //ac.start();
+//}
 public void drawBuilding(){
   rectMode(LEFT);
   fill(#808080);
@@ -311,6 +360,30 @@ void savePeopleDataOUTinDataStore()
   }
 }
 
+void saveRainDatainDataStore()
+{
+  int t = 0;
+  int lastHr = 3;
+  for(int i = 0; i < rainTable.getRowCount(); i++)
+  {
+    int newHour = Integer.parseInt(rainTable.getString(i, 0).split(" ")[1].split(":")[0]);
+    int val = rainTable.getInt(i, 1);
+    t += val;
+    if (newHour != lastHr)
+    {
+      lastHr = newHour;
+      
+      try
+      {
+        Date date = dateFormat.parse(rainTable.getString(i, 0).split(" ")[0]); 
+        String weekDayName = dayName[date.getDay()];
+        datastoreRAIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,t));
+      } catch(Exception e) {}
+      t = 0;
+    }
+  }
+}
+
 public void Hour(float value)
 {
   sliderHour = int(value);
@@ -321,6 +394,10 @@ public void Hour(float value)
   if (curDataOut == null || int(value) != curDataOut.hour)
   {
     trackOut = 0;
+  }
+  if (curDataRAIN == null || int(value) != curDataRAIN.hour)
+  {
+    rainStatus = false;
   }
 }
 public void Day(float value)
@@ -333,5 +410,9 @@ public void Day(float value)
   if (curDataOut == null || int(value) != curDataOut.weekDay)
   {
     trackOut = 0;
+  }
+  if (curDataRAIN == null || int(value) != curDataRAIN.weekDay)
+  {
+    rainStatus = false;
   }
 }
