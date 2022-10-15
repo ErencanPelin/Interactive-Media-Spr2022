@@ -51,7 +51,7 @@ void setup()
   //CHANGE
   lights();
   size(1500, 900, P3D); 
-  building = loadShape("uts_11_2.obj"); // assigns the OBJ file to the Pshape variable
+  building = loadShape("UTS_B11_Final.obj"); // assigns the OBJ file to the Pshape variable
   building.translate(-1300,-670,-400);
   building.rotate(PI);
   
