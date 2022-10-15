@@ -22,7 +22,7 @@ public class rain
   {
     fill(#81D0FF); //blue color of rain
     stroke(0);
-    circle(x, y, random(12)); //raindrop creation
+    circle(x, y, random(6)); //raindrop creation
     noStroke();
   }
 }

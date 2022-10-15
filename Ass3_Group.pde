@@ -38,7 +38,7 @@ int sliderHour;
 
 //RAIN
 rain[] r;
-int n = 350; //number of rain droplets
+int n = 300; //number of rain droplets
 boolean rainStatus; //toggle rain on or off
 //float rainAmount;
 
@@ -96,6 +96,8 @@ void setup()
 
     //ac = new AudioContext();
     rain = new SoundFile(this, "RainAudioFile.mp3");
+    rain.amp(0.03);
+
     
 }
 
@@ -362,12 +364,12 @@ void savePeopleDataOUTinDataStore()
 
 void saveRainDatainDataStore()
 {
-  int t = 0;
+  Float t = 0.0;
   int lastHr = 3;
   for(int i = 0; i < rainTable.getRowCount(); i++)
   {
     int newHour = Integer.parseInt(rainTable.getString(i, 0).split(" ")[1].split(":")[0]);
-    int val = rainTable.getInt(i, 1);
+    Float val = rainTable.getFloat(i, 1);
     t += val;
     if (newHour != lastHr)
     {
@@ -379,7 +381,7 @@ void saveRainDatainDataStore()
         String weekDayName = dayName[date.getDay()];
         datastoreRAIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,t));
       } catch(Exception e) {}
-      t = 0;
+      t = 0.0;
     }
   }
 }
