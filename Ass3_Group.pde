@@ -51,7 +51,7 @@ void setup()
   //CHANGE
   lights();
   size(1500, 900, P3D); 
-  building = loadShape("uts_b11.obj"); // assigns the OBJ file to the Pshape variable
+  building = loadShape("uts_11_2.obj"); // assigns the OBJ file to the Pshape variable
   building.translate(-1300,-670,-400);
   building.rotate(PI);
   
@@ -232,8 +232,8 @@ public void sound() {
 }
 public void drawBuilding(){
   rectMode(LEFT);
-  fill(#808080);
-  rect(width * 0.3-15, height * 0.3, width * 0.7, height * 0.55);
+  fill(#414141);
+  rect(width * 0.3, height * 0.3, width * 0.7-30, height * 0.55);
 }
 
 void drawHourTime() //draws current time on the screen
