@@ -65,13 +65,13 @@ void setup()
 
 
 //StringToDate
-  /*
-  //display data in console - DEBUGGING
-  for(int i = 0; i < actualDataTableIN.getRowCount(); i++)
+  
+  /*//display data in console - DEBUGGING
+  for(int i = 0; i <rainTable.getRowCount(); i++)
   {
-    for (int x = 0; x < actualDataTableIN.getColumnCount(); x++)
+    for (int x = 0; x < rainTable.getColumnCount(); x++)
     {
-      System.out.println(actualDataTableIN.getString(i, x));
+      System.out.println(rainTable.getString(i, x));
     }
   }*/
   
@@ -107,6 +107,7 @@ void draw()
     {
       currentDataIn = d.value;
       curDataIn = d;
+    
     }
   }
   for(DataStore d : datastoreOUT)
@@ -153,13 +154,13 @@ void draw()
    
    if (trackIn < currentDataIn)
    {
-      particles.add(new Particle(random(-90, 0), (height * 0.5f) + random(-5, 25), random(5, 10), random(0, 0), #00ff00));
+      particles.add(new Particle(random(-90, 0), (height * 0.5f) + random(-5, 25), random(5, 10), random(0, 0),#90FFC3));
       trackIn++;
    }   
    
    if (trackOut < currentDataOut)
    {
-      particles.add(new Particle((width / 2) + 150 + random(-40, 0), (height * 0.5f) + random(-5, 25), random(5, 6), random(0, 0), #ff0000));
+      particles.add(new Particle((width / 2) + 150 + random(-40, 0), (height * 0.5f) + random(-5, 25), random(5, 6), random(0, 0), #FF5517));
       trackOut++;
    } 
    
@@ -194,25 +195,25 @@ void draw()
   //garbage collect
   RemoveDeadParticles();
   
-  //if (index < peopleIN.getRowCount())
-  //{
-  //  int p = peopleIN.getInt(index, 1);
-  //  String s = Integer.toString(p);
-  //  textSize(30);
-  //  text("People in: " + s, 200, 100);
-  //  index++;
-  //  //DISPLAYS DATA ON SCREEN  FOR PEOPLE ENTERING
-  //}
+ /* if (index < peopleIN.getRowCount())
+  {
+    int p = peopleIN.getInt(index, 1);
+    String s = Integer.toString(p);
+    textSize(30);
+    text("People in: " + s, 200, 100);
+    index++;
+    //DISPLAYS DATA ON SCREEN  FOR PEOPLE ENTERING
+  }
   
-//  if (index < peopleOUT.getRowCount()) 
-//  {
-//    int o = peopleOUT.getInt(index, 1);
-//    String s = Integer.toString(o);
-//    textSize(30);
-//    text("People out: " + s, 200, 200);
-//    index++;
-//    //DISPLAYS DATA ON SCREEN FOR PEOPLE LEAVING
-//  }
+  if (index < peopleOUT.getRowCount()) 
+  {
+    int o = peopleOUT.getInt(index, 1);
+    String s = Integer.toString(o);
+    textSize(30);
+    text("People out: " + s, 200, 200);
+    index++;
+    //DISPLAYS DATA ON SCREEN FOR PEOPLE LEAVING
+  }*/
 }
 
 public void sound() {
@@ -240,7 +241,7 @@ void spawnBuildingParticle() //draws 'p' number circles within the building
   PVector bounds2 = new PVector(width * 0.7 - 20, height * 0.55 - 20); //top right corner of the building
   
   PVector pos = new PVector(random(bounds1.x, bounds2.x), random(bounds1.y, bounds2.y)); //calculate a random position between bounds
-  Particle newParticle = new Particle(pos.x, pos.y, 0, 0, #4499ff);
+  Particle newParticle = new Particle(pos.x, pos.y, 0, 0, #FFFFFF);
   inBuilding.add(newParticle);
 }
 void RemoveDeadParticles() //removes dead particles at the end of their lifetime
