@@ -233,7 +233,7 @@ public void sound() {
 }
 public void drawBuilding(){
   rectMode(LEFT);
-  fill(#414141);
+  fill(#808080);
   rect(width * 0.3, height * 0.3, width * 0.7-30, height * 0.55);
 }
 
