@@ -11,6 +11,8 @@ public static class GUI //all GUI functions go in here
     
     //init UI
     cp5 = new ControlP5(main);
+    
+    //Slider for Time
     cp5.addSlider("Hour")
        .setPosition(main.width/4, main.height - 90)
        .setRange(00.00, 23.59)
@@ -19,6 +21,7 @@ public static class GUI //all GUI functions go in here
        .setLabelVisible(false)
        ;
        
+     //Slider for Days
      cp5.addSlider("Day")  // Sunday = 7; Moday = 1; ....;Saturday = 6
        .setPosition(main.width/4, main.height - 150)
        .setRange(1, 7)
@@ -27,13 +30,7 @@ public static class GUI //all GUI functions go in here
        .setLabelVisible(false)
        ;
        
-    /* cp5.addToggle("RealPauseToggle")
-     .setPosition(main.width/4.5, main.height - 130)
-     .setState(true)
-     .setLabel("Real Time             Pause")
-     .setMode(ControlP5.SWITCH)
-     .setSize(main.width/10, main.height/18)
-     ;*/
+     //Set slider labels 
      
      Slider d = cp5.get(Slider.class, "Day");
      d.getTickMark(0).setLabel("Monday");
@@ -70,11 +67,10 @@ public static class GUI //all GUI functions go in here
      h.getTickMark(22).setLabel("10PM");
      h.getTickMark(23).setLabel("11PM");
      
-     // Toggle s = cp5.get(Toggle.class, "RealPauseToggle");
-     
-      SetSliderColor(d , #000000, #FFFFFF, #FFFFFF);
-      SetSliderColor(h , #000000, #FFFFFF, #FFFFFF);
-     // SetToggleColor(s , #000000, #FFFFFF, #FFFFFF);
+    
+     //set slider colors
+     SetSliderColor(d , #000000, #FFFFFF, #FFFFFF);
+     SetSliderColor(h , #000000, #FFFFFF, #FFFFFF);
      
   }
   
@@ -84,13 +80,5 @@ public static class GUI //all GUI functions go in here
     .setColorForeground(foreCol)
     .setColorActive(actCol);
   }
-  
- /*  private static void SetToggleColor(Toggle t, color backCol, color foreCol, color actCol)
-  {
-    t.setColorBackground(backCol * 1)
-    .setColorForeground(foreCol)
-    .setColorActive(actCol);
-  }*/
-  
-  
+    
 }

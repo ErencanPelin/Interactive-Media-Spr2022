@@ -11,9 +11,6 @@ String[] dayName = {
 };
 public float timeStr = 0.0f; //time string
 float time = 0; //current time within the application
-float[] peopleData = new float[10]; //people data - connect to EIF data
-//float[] tempData = new float[100]; //weather or other data - connect ot EIF data
-int dataPoint = 0; //the variable used to scroll through the data
 List<Particle> particles = new ArrayList(); //stores all active particles to be rendered in the scene
 List<Particle> garbageStack = new ArrayList(); //dead particles are added to this list and then destroyed in the next frame - garbage collection
 List<Particle> inBuilding = new ArrayList(); //the particles currently in the building
@@ -28,6 +25,7 @@ List<DataStore> datastoreRAIN = new ArrayList();
 
 PShape building; // creats a variable for the obj file
 
+// variables for Table
 Table peopleIN;
 Table peopleOUT;
 Table rainTable;
@@ -75,35 +73,17 @@ void setup()
   savePeopleDataINinDataStore();
   savePeopleDataOUTinDataStore();
   saveRainDatainDataStore();
-
-
-//StringToDate
-  
-  //display data in console - DEBUGGING
-  //for(int i = 0; i <rainTable.getRowCount(); i++)
-  //{
-  //  for (int x = 0; x < rainTable.getColumnCount(); x++)
-  //  {
-  //    System.out.println(rainTable.getString(i, x));
-  //  }
-  //}
-  
+ 
   //RAIN
   r = new rain[n];
   for(int i = 0; i < r.length; i++) 
-    r[i] = new rain(random(width), random(200), random(5, 25));
+  r[i] = new rain(random(width), random(200), random(5, 25));
   
-  //for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
-    //peopleData[i] = random(0, 20);
-    
-
     //ac = new AudioContext();
     drizzle = new SoundFile(this, "DrizzleAudioFile.mp3");
     drizzle.amp(0.03); //Audio Volume Adjuster
     rain = new SoundFile(this, "RainAudioFile.mp3");
-    rain.amp(0.5); //Audio Volume Adjuster
-
-    
+    rain.amp(0.5); //Audio Volume Adjuster   
 }
 
 int trackIn;
@@ -120,10 +100,10 @@ void draw()
   curDataIn = null;
   curDataOut = null;
   curDataRAIN = null;
+  
   // match data with slider and save in a current variable
   for(DataStore d : datastoreIN)
   {
-    //println(sliderDay + " " + sliderHour);
     if(d.weekDay == sliderDay && d.hour == sliderHour)
     {
       currentDataIn = d.value;
@@ -133,12 +113,10 @@ void draw()
   }
   for(DataStore d : datastoreOUT)
   {
-    //println(sliderDay + " " + sliderHour);
     if(d.weekDay == sliderDay && d.hour == sliderHour)
     {
       currentDataOut = d.value;
       curDataOut = d;
-      //System.out.println(curDataOut);
     }
   }
   for(DataStore d : datastoreRAIN)
@@ -147,21 +125,29 @@ void draw()
     if(d.weekDay == sliderDay && d.hour == sliderHour)
     {
       currentDataRAIN = d.value;
-      //System.out.println(currentDataRAIN);
       curDataRAIN = d;
-      //System.out.println(curDataRAIN);
     }
   }
   if (curDataIn == null) currentDataIn = 0;
   if (curDataOut == null) currentDataOut = 0;
   if (curDataRAIN == null) currentDataRAIN = 0;
   toFill = round(currentDataIn - currentDataOut);
+  
+  
+  //Explaining text 
+  fill(#ffffff);
+  float textSize = 40;
+  textSize(textSize);
+  text("People entering" + currentDataIn, 30, 40 );
+  text("People exiting" + currentDataOut, 40, 40 );
+  
   //refresh screen
   clear();
   
-  float r = (1f - abs(12f - sliderHour) / 23f) * 103f;
-  float g = (1f - abs(12f - sliderHour) / 23f) * 160f;
-  float b = (1f - abs(12f - sliderHour) / 23f) * 227f;
+  //backround color according to time of the day
+  float r = (1f - abs(8f - sliderHour) / 23f) * 229f;
+  float g = (1f - abs(8f - sliderHour) / 23f) * 229f;
+  float b = (1f - abs(8f - sliderHour) / 23f) * 229f;
   skyColor = color(r, g, b);
   background(skyColor);
   shape(building);
@@ -175,9 +161,6 @@ void draw()
     time = 0;
     timeStr++; //loop the hour
     if (timeStr >= 24) timeStr = 0; //loop time to start next day
-    
-    dataPoint++; //increment the datapoint for the hour
-    if (dataPoint >= peopleData.length) dataPoint = 0; //loop
    
    if (trackIn < currentDataIn)
    {
@@ -223,35 +206,8 @@ void draw()
   //garbage collect
   RemoveDeadParticles();
   
- /* if (index < peopleIN.getRowCount())
-  {
-    int p = peopleIN.getInt(index, 1);
-    String s = Integer.toString(p);
-    textSize(30);
-    text("People in: " + s, 200, 100);
-    index++;
-    //DISPLAYS DATA ON SCREEN  FOR PEOPLE ENTERING
-  }
-  
-  if (index < peopleOUT.getRowCount()) 
-  {
-    int o = peopleOUT.getInt(index, 1);
-    String s = Integer.toString(o);
-    textSize(30);
-    text("People out: " + s, 200, 200);
-    index++;
-    //DISPLAYS DATA ON SCREEN FOR PEOPLE LEAVING
-  }*/
+ 
 }
-
-//public void sound() {
-//  //String audioFileName = "RainAudioFile.mp3";
-//  //SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
-//  //Gain g = new Gain(ac, 1, 1);
-//  //g.addInput(player);
-//  //ac.out.addInput(g);
-//  //ac.start();
-//}
 
 void drawHourTime() //draws current time on the screen
 {
@@ -279,6 +235,8 @@ void RemoveDeadParticles() //removes dead particles at the end of their lifetime
 }
 
 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+// saves all the poepleIn data from the table in the DataStore
 void savePeopleDataINinDataStore()
 {
   int t = 0;
@@ -294,9 +252,7 @@ void savePeopleDataINinDataStore()
       
       try
       {
-       // println(peopleIN.getString(i, 0).split(" ")[0]);
         Date date = dateFormat.parse(peopleIN.getString(i, 0).split(" ")[0]); 
-      //  println(date);
         String weekDayName = dayName[date.getDay()];
         datastoreIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,t));
       } catch(Exception e) {}
@@ -305,6 +261,8 @@ void savePeopleDataINinDataStore()
   }
 }
 
+
+// saves all the poepleOUT data from the table in the DataStore
 void savePeopleDataOUTinDataStore()
 {
   int t = 0;
@@ -329,6 +287,7 @@ void savePeopleDataOUTinDataStore()
   }
 }
 
+// saves all the rain data from the table in the DataStore
 void saveRainDatainDataStore()
 {
   Float t = 0.0;
@@ -337,17 +296,14 @@ void saveRainDatainDataStore()
   {
     int newHour = Integer.parseInt(rainTable.getString(i, 0).split(" ")[1].split(":")[0]);
     Float val = rainTable.getFloat(i, 1);
-    //System.out.println(val);
     t += val;
     if (newHour != lastHr)
     {
       lastHr = newHour;
       
       try
-      {
-        //System.out.println(rainTable.getString(i, 0).split(" ")[0]);
+      {       
         Date date = dateFormat.parse(rainTable.getString(i, 0).split(" ")[0]); 
-        //System.out.println(date);
         String weekDayName = dayName[date.getDay()];
         datastoreRAIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,t));
       } catch(Exception e) {}
@@ -356,6 +312,7 @@ void saveRainDatainDataStore()
   }
 }
 
+//start rain accoring to data
  public void rain() { 
   if (currentDataRAIN > 0.0 && currentDataRAIN < 0.5) {
     rainStatusDRIZZLE = true;
@@ -365,18 +322,17 @@ void saveRainDatainDataStore()
     rainStatusFULL = true;
   }
   
-  //rainStatus = true; //turns rain on if set to true
   if (rainStatusDRIZZLE == true) 
   {
     textSize(30);
     fill(255);
-    text("! Rainfall @ Current Selected Time: " + curDataRAIN.value + "ml", 30, 40);
+    text("Rainfall: " + currentDataRAIN + "ml", 50, 40);
     for(int i = 0; i < r.length; i++) 
     {
       r[i].raindrop();
       r[i].update();
     }
-    //sound();
+    //sound
     drizzleOnce++;
     if (drizzleOnce == 1){
     drizzle.play();
@@ -391,7 +347,7 @@ void saveRainDatainDataStore()
   {
     textSize(30);
     fill(255);
-    text("! Rainfall @ Current Selected Time: " + curDataRAIN.value + "ml", 30, 40);
+    text("Rainfall: " + currentDataRAIN+ "ml", 50, 40);
     for(int i = 0; i < r.length; i++) 
     {
       r[i].raindrop();
@@ -399,7 +355,7 @@ void saveRainDatainDataStore()
       r[i].update();
       r[i].update();
     }
-    //sound();
+    //sound
     rainOnce++;
     if (rainOnce == 1){
     rain.play();
@@ -411,6 +367,7 @@ void saveRainDatainDataStore()
   }
  }
 
+//get Hour value from Slider
 public void Hour(float value)
 {
   sliderHour = int(value);
@@ -428,6 +385,8 @@ public void Hour(float value)
     rainStatusFULL = false;
   }
 }
+
+//get Day value from Slider
 public void Day(float value)
 {
   sliderDay = int(value);
