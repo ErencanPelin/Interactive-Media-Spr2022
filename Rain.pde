@@ -21,7 +21,7 @@ public class rain
   void raindrop() 
   {
     fill(#81D0FF); //blue color of rain
-    stroke(0);
+    noStroke();
     circle(x, y, random(6)); //raindrop creation
     noStroke();
   }
