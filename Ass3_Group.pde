@@ -113,6 +113,7 @@ int toFill;
 DataStore curDataIn;
 DataStore curDataOut;
 DataStore curDataRAIN;
+color skyColor = #000000;
 void draw()
 {
   lights();
@@ -157,32 +158,14 @@ void draw()
   toFill = round(currentDataIn - currentDataOut);
   //refresh screen
   clear();
+  
+  float r = (1f - abs(12f - sliderHour) / 23f) * 103f;
+  float g = (1f - abs(12f - sliderHour) / 23f) * 160f;
+  float b = (1f - abs(12f - sliderHour) / 23f) * 227f;
+  skyColor = color(r, g, b);
+  background(skyColor);
   shape(building);
 
-  //for(int i = 0; i <rainTable.getRowCount(); i++)
-  //{
-  //  for (int x = 0; x < rainTable.getColumnCount(); x++)
-  //  {
-  //    //System.out.println(rainTable.getString(i, x));
-  //    rainAmount = rainTable.getFloat(i, 1);
-  //    //System.out.println(rainAmount);
-  //  }
-  //}
-  
-  //if (rainAmount > 0.0) {
-  //  rainStatus = true;
-  //}
-  //if (rainAmount == 0.0) {
-  //  rainStatus = false;
-  //}
-  
-  //if (mousePressed) {
-  //  rainStatus = true;
-  //}
-  //else {
-  //  rainStatus = false;
-  //}
-  
   rain();
  
   //increment time
@@ -198,13 +181,13 @@ void draw()
    
    if (trackIn < currentDataIn)
    {
-      particles.add(new Particle(random(-90, 0), (height * 0.5f) + random(-5, 25), random(5, 10), random(0, 0),#90FFC3));
+      particles.add(new Particle(random(-90, 0), (height * 0.55f) + random(-5, 25), random(5, 6), random(0, 0),#90FFC3, 75));
       trackIn++;
    }   
    
    if (trackOut < currentDataOut)
    {
-      particles.add(new Particle((width / 2) + 150 + random(-40, 0), (height * 0.5f) + random(-5, 25), random(5, 6), random(0, 0), #FF5517));
+      particles.add(new Particle((width / 2) + 290, (height * 0.6f) + random(-5, 25), random(5, 6), random(0, 0), #FF5517, 100));
       trackOut++;
    } 
    
@@ -230,7 +213,8 @@ void draw()
     p.Update();
     if (p.lifetime <= 0) garbageStack.add(p);
   }
-  drawBuilding();
+
+
   for(Particle p : inBuilding)
   {
     if (p == null) continue;
@@ -268,11 +252,6 @@ void draw()
 //  //ac.out.addInput(g);
 //  //ac.start();
 //}
-public void drawBuilding(){
-  rectMode(LEFT);
-  fill(#808080);
-  rect(width * 0.3, height * 0.3, width * 0.7-30, height * 0.55);
-}
 
 void drawHourTime() //draws current time on the screen
 {
@@ -286,11 +265,11 @@ void spawnBuildingParticle() //draws 'p' number circles within the building
 {
   //the area boids will spawn in and move around in
   //width * 0.3, height * 0.3, width * 0.7, height * 0.55 - rect size for the building
-  PVector bounds1 = new PVector(width * 0.3 + 20, height * 0.3 + 20); //bottom left corner of the building
-  PVector bounds2 = new PVector(width * 0.7 - 20, height * 0.55 - 20); //top right corner of the building
+  PVector bounds1 = new PVector(width * 0.3, height * 0.3 + 20); //bottom left corner of the building
+  PVector bounds2 = new PVector(width * 0.7 - 40, height * 0.5 + 70); //top right corner of the building
   
   PVector pos = new PVector(random(bounds1.x, bounds2.x), random(bounds1.y, bounds2.y)); //calculate a random position between bounds
-  Particle newParticle = new Particle(pos.x, pos.y, 0, 0, #FFFFFF);
+  Particle newParticle = new Particle(pos.x, pos.y, 0, 0, #FFFFFF, 50);
   inBuilding.add(newParticle);
 }
 void RemoveDeadParticles() //removes dead particles at the end of their lifetime

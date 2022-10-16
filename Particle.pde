@@ -6,10 +6,10 @@ public class Particle
   public float lifetime;
   float size;
   
-  public Particle(float xPos, float yPos, float xVel, float yVel, color _color)
+  public Particle(float xPos, float yPos, float xVel, float yVel, color _color, float lifetime)
   {
     size = random(10, 20);
-    lifetime = random(50, 50);
+    this.lifetime = lifetime;
     pos = new PVector(xPos, yPos);
     this.xVel = xVel;
     this.yVel = yVel;
