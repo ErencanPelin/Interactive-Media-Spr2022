@@ -1,9 +1,17 @@
+/////////////
+// Imports //
+/////////////
+
 import beads.*;
 import processing.sound.*;
 import java.util.List;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+///////////////
+// Variables //
+///////////////
 
 String[] dayName = { 
   "Sunday", "Monday", "Tuesday", "Wednesday", 
@@ -48,6 +56,19 @@ SoundFile rain;
 int drizzleOnce;
 int rainOnce;
 
+int trackIn;
+int trackOut;
+int trackFill;
+int toFill;
+DataStore curDataIn;
+DataStore curDataOut;
+DataStore curDataRAIN;
+color skyColor = #000000;
+
+///////////
+// Setup //
+///////////
+
 void setup()
 {
   noStroke();
@@ -86,14 +107,10 @@ void setup()
     rain.amp(0.5); //Audio Volume Adjuster   
 }
 
-int trackIn;
-int trackOut;
-int trackFill;
-int toFill;
-DataStore curDataIn;
-DataStore curDataOut;
-DataStore curDataRAIN;
-color skyColor = #000000;
+///////////////
+// Main Draw //
+///////////////
+
 void draw()
 {
   lights();
@@ -209,6 +226,11 @@ void draw()
  
 }
 
+
+///////////////////////////
+// Functions and Methods //
+///////////////////////////
+
 void drawHourTime() //draws current time on the screen
 {
   fill(#ffffff);
@@ -220,7 +242,6 @@ void drawHourTime() //draws current time on the screen
 void spawnBuildingParticle() //draws 'p' number circles within the building
 {
   //the area boids will spawn in and move around in
-  //width * 0.3, height * 0.3, width * 0.7, height * 0.55 - rect size for the building
   PVector bounds1 = new PVector(width * 0.3, height * 0.3 + 20); //bottom left corner of the building
   PVector bounds2 = new PVector(width * 0.7 - 40, height * 0.5 + 70); //top right corner of the building
   
@@ -260,7 +281,6 @@ void savePeopleDataINinDataStore()
     }
   }
 }
-
 
 // saves all the poepleOUT data from the table in the DataStore
 void savePeopleDataOUTinDataStore()
