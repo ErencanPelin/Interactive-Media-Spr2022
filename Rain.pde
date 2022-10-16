@@ -20,9 +20,9 @@ public class rain
   
   void raindrop() 
   {
-    fill(#81D0FF); //blue color of rain
+    fill(#068BD6); //blue color of rain
     noStroke();
-    circle(x, y, random(6)); //raindrop creation
+    circle(x, y, random(10)); //raindrop creation
     noStroke();
   }
 }

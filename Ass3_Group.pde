@@ -133,14 +133,6 @@ void draw()
   if (curDataRAIN == null) currentDataRAIN = 0;
   toFill = round(currentDataIn - currentDataOut);
   
-  
-  //Explaining text 
-  fill(#ffffff);
-  float textSize = 40;
-  textSize(textSize);
-  text("People entering" + currentDataIn, 30, 40 );
-  text("People exiting" + currentDataOut, 40, 40 );
-  
   //refresh screen
   clear();
   
@@ -151,6 +143,22 @@ void draw()
   skyColor = color(r, g, b);
   background(skyColor);
   shape(building);
+  
+  if (currentDataIn > 0) {
+  fill(0);
+  textSize(20);
+  text("People entering Broadway East: " + int(currentDataIn), 40, 50 );
+  }
+  if (currentDataOut > 0) {
+    fill(0);
+  textSize(20);
+  text("People exiting Broadway East: " + int(currentDataOut), 40, 80 );
+  }
+  
+  textSize(20);
+  fill(0);
+  text("21st February - 27th February", width/2.38, height - 170);
+
 
   rain();
  
@@ -324,9 +332,9 @@ void saveRainDatainDataStore()
   
   if (rainStatusDRIZZLE == true) 
   {
-    textSize(30);
-    fill(255);
-    text("Rainfall: " + currentDataRAIN + "ml", 50, 40);
+    textSize(20);
+    fill(0);
+    text("Rainfall: " + currentDataRAIN + "ml", 40, 110);
     for(int i = 0; i < r.length; i++) 
     {
       r[i].raindrop();
@@ -345,9 +353,9 @@ void saveRainDatainDataStore()
   
   if (rainStatusFULL == true) 
   {
-    textSize(30);
-    fill(255);
-    text("Rainfall: " + currentDataRAIN+ "ml", 50, 40);
+    textSize(20);
+    fill(0);
+    text("Rainfall: " + currentDataRAIN+ "ml", 40, 110);
     for(int i = 0; i < r.length; i++) 
     {
       r[i].raindrop();
