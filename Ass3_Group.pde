@@ -299,7 +299,7 @@ void RemoveDeadParticles() //removes dead particles at the end of their lifetime
   garbageStack.clear();
 }
 
-SimpleDateFormat dateFormat = new SimpleDateFormat("yy-mm-dd");
+SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 void savePeopleDataINinDataStore()
 {
   int t = 0;
@@ -315,7 +315,9 @@ void savePeopleDataINinDataStore()
       
       try
       {
+       // println(peopleIN.getString(i, 0).split(" ")[0]);
         Date date = dateFormat.parse(peopleIN.getString(i, 0).split(" ")[0]); 
+      //  println(date);
         String weekDayName = dayName[date.getDay()];
         datastoreIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,t));
       } catch(Exception e) {}
