@@ -50,7 +50,6 @@ SoundFile rain;
 int drizzleOnce;
 int rainOnce;
 
-
 void setup()
 {
   noStroke();
@@ -60,7 +59,7 @@ void setup()
   size(1500, 900, P3D);
   building = loadShape("UTS_B11_Final.obj"); // assigns the OBJ file to the Pshape variable
   building.translate(-1300,-670,-400);
-  building.rotate(PI);
+  building.rotate(PI, 0, 0, 1);
   
   //init GUI
   GUI.Init(this);
