@@ -3,6 +3,7 @@ import processing.sound.*;
 import java.util.List;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 String[] dayName = { 
   "Sunday", "Monday", "Tuesday", "Wednesday", 
@@ -38,12 +39,15 @@ int sliderHour;
 
 //RAIN
 rain[] r;
-int n = 300; //number of rain droplets
-boolean rainStatus; //toggle rain on or off
+int n = 150; //number of rain droplets
+boolean rainStatusDRIZZLE;
+boolean rainStatusFULL;//toggle rain on or off
 //float rainAmount;
 
 //AudioContext ac;
+SoundFile drizzle;
 SoundFile rain;
+int drizzleOnce;
 int rainOnce;
 
 
@@ -76,27 +80,29 @@ void setup()
 
 //StringToDate
   
-  /*//display data in console - DEBUGGING
-  for(int i = 0; i <rainTable.getRowCount(); i++)
-  {
-    for (int x = 0; x < rainTable.getColumnCount(); x++)
-    {
-      System.out.println(rainTable.getString(i, x));
-    }
-  }*/
+  //display data in console - DEBUGGING
+  //for(int i = 0; i <rainTable.getRowCount(); i++)
+  //{
+  //  for (int x = 0; x < rainTable.getColumnCount(); x++)
+  //  {
+  //    System.out.println(rainTable.getString(i, x));
+  //  }
+  //}
   
   //RAIN
   r = new rain[n];
   for(int i = 0; i < r.length; i++) 
     r[i] = new rain(random(width), random(200), random(5, 25));
   
-  for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
-    peopleData[i] = random(0, 20);
+  //for (int i = 0; i < peopleData.length; i++) //this should be replaced with the data from the API
+    //peopleData[i] = random(0, 20);
     
 
     //ac = new AudioContext();
+    drizzle = new SoundFile(this, "DrizzleAudioFile.mp3");
+    drizzle.amp(0.03); //Audio Volume Adjuster
     rain = new SoundFile(this, "RainAudioFile.mp3");
-    rain.amp(0.03);
+    rain.amp(0.5); //Audio Volume Adjuster
 
     
 }
@@ -132,6 +138,7 @@ void draw()
     {
       currentDataOut = d.value;
       curDataOut = d;
+      //System.out.println(curDataOut);
     }
   }
   for(DataStore d : datastoreRAIN)
@@ -140,8 +147,9 @@ void draw()
     if(d.weekDay == sliderDay && d.hour == sliderHour)
     {
       currentDataRAIN = d.value;
+      //System.out.println(currentDataRAIN);
       curDataRAIN = d;
-      System.out.println(curDataRAIN);
+      //System.out.println(curDataRAIN);
     }
   }
   if (curDataIn == null) currentDataIn = 0;
@@ -176,31 +184,7 @@ void draw()
   //  rainStatus = false;
   //}
   
-  if (curDataRAIN.value > 0.0) {
-    rainStatus = true;
-  }
-  
-  //rainStatus = true; //turns rain on if set to true
-  if (rainStatus == true) 
-  {
-    textSize(30);
-    fill(255);
-    text("! Rainfall @ Current Selected Time: " + curDataRAIN.value + "ml", 30, 40);
-    for(int i = 0; i < r.length; i++) 
-    {
-      r[i].raindrop();
-      r[i].update();
-    }
-    //sound();
-    rainOnce++;
-    if (rainOnce == 1){
-    rain.play();
-    }
-  }
-  else {
-    rain.stop();
-    rainOnce = 0;
-  }
+  rain();
  
   //increment time
   time += 1; //where 0.5 = timeSpeed
@@ -373,6 +357,7 @@ void saveRainDatainDataStore()
   {
     int newHour = Integer.parseInt(rainTable.getString(i, 0).split(" ")[1].split(":")[0]);
     Float val = rainTable.getFloat(i, 1);
+    //System.out.println(val);
     t += val;
     if (newHour != lastHr)
     {
@@ -380,7 +365,9 @@ void saveRainDatainDataStore()
       
       try
       {
+        //System.out.println(rainTable.getString(i, 0).split(" ")[0]);
         Date date = dateFormat.parse(rainTable.getString(i, 0).split(" ")[0]); 
+        //System.out.println(date);
         String weekDayName = dayName[date.getDay()];
         datastoreRAIN.add(new DataStore(date,weekDayName,date.getDay(),lastHr,t));
       } catch(Exception e) {}
@@ -388,6 +375,61 @@ void saveRainDatainDataStore()
     }
   }
 }
+
+ public void rain() { 
+  if (currentDataRAIN > 0.0 && currentDataRAIN < 0.5) {
+    rainStatusDRIZZLE = true;
+  }
+  
+  if (currentDataRAIN > 0.5) {
+    rainStatusFULL = true;
+  }
+  
+  //rainStatus = true; //turns rain on if set to true
+  if (rainStatusDRIZZLE == true) 
+  {
+    textSize(30);
+    fill(255);
+    text("! Rainfall @ Current Selected Time: " + curDataRAIN.value + "ml", 30, 40);
+    for(int i = 0; i < r.length; i++) 
+    {
+      r[i].raindrop();
+      r[i].update();
+    }
+    //sound();
+    drizzleOnce++;
+    if (drizzleOnce == 1){
+    drizzle.play();
+    }
+  }
+  else {
+    drizzle.stop();
+    drizzleOnce = 0;
+  }
+  
+  if (rainStatusFULL == true) 
+  {
+    textSize(30);
+    fill(255);
+    text("! Rainfall @ Current Selected Time: " + curDataRAIN.value + "ml", 30, 40);
+    for(int i = 0; i < r.length; i++) 
+    {
+      r[i].raindrop();
+      r[i].update();
+      r[i].update();
+      r[i].update();
+    }
+    //sound();
+    rainOnce++;
+    if (rainOnce == 1){
+    rain.play();
+    }
+  }
+  else {
+    rain.stop();
+    rainOnce = 0;
+  }
+ }
 
 public void Hour(float value)
 {
@@ -402,7 +444,8 @@ public void Hour(float value)
   }
   if (curDataRAIN == null || int(value) != curDataRAIN.hour)
   {
-    rainStatus = false;
+    rainStatusDRIZZLE = false;
+    rainStatusFULL = false;
   }
 }
 public void Day(float value)
@@ -418,6 +461,7 @@ public void Day(float value)
   }
   if (curDataRAIN == null || int(value) != curDataRAIN.weekDay)
   {
-    rainStatus = false;
+    rainStatusDRIZZLE = false;
+    rainStatusFULL = false;
   }
 }
